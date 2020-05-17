@@ -9,7 +9,6 @@ public interface StudentService {
     StudentsPageableResponse getAll() ;
     StudentsPageableResponse getPage(Integer page, Integer items) ;
     StudentResponse getByRut(String rut) ;
-    Integer getCount();
     StudentResponse createStudent(Student student);
     StudentResponse editStudent(Student student);
     StudentResponse deleteStudent(String rut);

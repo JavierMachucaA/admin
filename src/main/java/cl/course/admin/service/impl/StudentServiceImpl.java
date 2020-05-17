@@ -52,13 +52,8 @@ public class StudentServiceImpl implements StudentService {
         if (studentExist != null) {
             return new StudentResponse(true, ConstantsUtils.MSJ_RUT_EXIST, studentExist);
         } else {
-            return new StudentResponse(false, ConstantsUtils.MSJ_USER_NOT_EXIST, null);
+            return new StudentResponse(false, ConstantsUtils.MSJ_STUDENT_NOT_EXIST, null);
         }
-    }
-
-    @Override
-    public Integer getCount() {
-        return null;
     }
 
     @Override
@@ -73,7 +68,7 @@ public class StudentServiceImpl implements StudentService {
             return validate;
         }
         student.setRut(RutUtil.cleanRut(student.getRut()));
-        StudentResponse studentResponse = new StudentResponse(true,ConstantsUtils.MSJ_SUCCESS_CREATED, this.studentRepository.save(student));
+        StudentResponse studentResponse = new StudentResponse(true,ConstantsUtils.MSJ_STUDENT_SUCCESS_CREATED, this.studentRepository.save(student));
         return studentResponse;
     }
 
@@ -89,7 +84,7 @@ public class StudentServiceImpl implements StudentService {
             return validate;
         }
         student.setRut(RutUtil.cleanRut(student.getRut()));
-        StudentResponse studentResponse = new StudentResponse(true,ConstantsUtils.MSJ_SUCCESS_EDIT, this.studentRepository.save(student));
+        StudentResponse studentResponse = new StudentResponse(true,ConstantsUtils.MSJ_STUDENT_SUCCESS_EDIT, this.studentRepository.save(student));
         return studentResponse;
     }
 
@@ -98,30 +93,30 @@ public class StudentServiceImpl implements StudentService {
         Student studentExist = this.studentRepository.getByRut(rut);
         if (studentExist!=null) {
             this.studentRepository.deleteByRut(rut);
-            return new StudentResponse(true, ConstantsUtils.MSJ_STUDENTE_DELETED_SUCCES,rut);
+            return new StudentResponse(true, ConstantsUtils.MSJ_STUDENT_DELETED_SUCCES,rut);
         } else {
-            return new StudentResponse(false, ConstantsUtils.MSJ_USER_NOT_EXIST, null);
+            return new StudentResponse(false, ConstantsUtils.MSJ_STUDENT_NOT_EXIST, null);
         }
     }
 
     private StudentResponse getErrors(Student student) {
         if (student == null){
-            return new StudentResponse(false,ConstantsUtils.MSJ_USER_IS_NULL, null);
+            return new StudentResponse(false,ConstantsUtils.MSJ_STUDENT_IS_NULL, null);
         }
         if (student.getRut() == null){
-            return new StudentResponse(false,ConstantsUtils.MSJ_USER_IS_RUT_NULL, null);
+            return new StudentResponse(false,ConstantsUtils.MSJ_STUDENT_IS_RUT_NULL, null);
         }
         if (student.getName() == null ){
-            return new StudentResponse(false,ConstantsUtils.MSJ_USER_IS_NAME_NULL, null);
+            return new StudentResponse(false,ConstantsUtils.MSJ_STUDENT_IS_NAME_NULL, null);
         }
         if (student.getLastname() == null ){
-            return new StudentResponse(false,ConstantsUtils.MSJ_USER_IS_LASTNAME_NULL, null);
+            return new StudentResponse(false,ConstantsUtils.MSJ_STUDENT_IS_LASTNAME_NULL, null);
         }
         if (student.getAge() == null ){
-            return new StudentResponse(false,ConstantsUtils.MSJ_USER_IS_AGE_NULL, null);
+            return new StudentResponse(false,ConstantsUtils.MSJ_STUDENT_IS_AGE_NULL, null);
         }
         if (student.getCourse() == null ){
-            return new StudentResponse(false,ConstantsUtils.MSJ_USER_IS_COUSE_NULL, null);
+            return new StudentResponse(false,ConstantsUtils.MSJ_STUDENT_IS_COUSE_NULL, null);
         }
         return new StudentResponse(true, null, null);
     }
@@ -130,33 +125,33 @@ public class StudentServiceImpl implements StudentService {
         Student studentBD = this.studentRepository.getByRut(student.getRut());
         if (studentBD != null) {
             if (!edit) {
-                return new StudentResponse(false,ConstantsUtils.MSJ_USER_RUT_ALREDY_USE, null);
+                return new StudentResponse(false,ConstantsUtils.MSJ_STUDENT_RUT_ALREDY_USE, null);
             }
         } else {
             if (edit) {
-                return new StudentResponse(false, ConstantsUtils.MSJ_USER_NOT_EXIST, null);
+                return new StudentResponse(false, ConstantsUtils.MSJ_STUDENT_NOT_EXIST, null);
             }
         }
 
         if (student.getRut().length() > 12) {
-            return new StudentResponse(false, ConstantsUtils.MSJ_USER_IS_COUSE_NULL, null);
+            return new StudentResponse(false, ConstantsUtils.MSJ_STUDENT_IS_COUSE_NULL, null);
         }
 
         if (!RutUtil.validateRut(student.getRut())) {
-            return new StudentResponse(false, ConstantsUtils.MSJ_USER_RUT_NOT_RIGHT, null);
+            return new StudentResponse(false, ConstantsUtils.MSJ_STUDENT_RUT_NOT_RIGHT, null);
         }
 
         if (student.getAge() < 18) {
-            return new StudentResponse(false,ConstantsUtils.MSJ_USER_UNDER_EIGHTEEN_YEARS, null);
+            return new StudentResponse(false,ConstantsUtils.MSJ_STUDENT_UNDER_EIGHTEEN_YEARS, null);
         }
 
         if (student.getCourse().length() > 4) {
-            return new StudentResponse(false,ConstantsUtils.MSJ_USER_RUT_EXTENDS_LENGHT, null);
+            return new StudentResponse(false,ConstantsUtils.MSJ_STUDENT_RUT_EXTENDS_LENGHT, null);
         }
 
         Course course = this.courseRepository.getByCode(student.getCourse());
         if (course == null){
-            return new StudentResponse(false,ConstantsUtils.MSJ_USER_IS_COUSE_NOT_EXIST, null);
+            return new StudentResponse(false,ConstantsUtils.MSJ_STUDENT_IS_COUSE_NOT_EXIST, null);
         }
         return new StudentResponse(true, null, null);
     }
