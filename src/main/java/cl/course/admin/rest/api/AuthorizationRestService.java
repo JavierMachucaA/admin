@@ -1,7 +1,6 @@
 package cl.course.admin.rest.api;
 
-import cl.course.admin.model.AuthenticationRequest;
-import cl.course.admin.model.JwtResponse;
+import cl.course.admin.model.response.JwtResponse;
 import cl.course.admin.security.JwtArtifact;
 import cl.course.admin.service.impl.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;

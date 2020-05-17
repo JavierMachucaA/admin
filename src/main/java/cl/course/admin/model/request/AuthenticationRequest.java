@@ -1,4 +1,4 @@
-package cl.course.admin.model;
+package cl.course.admin.model.request;
 
 public class AuthenticationRequest {
     private String username;

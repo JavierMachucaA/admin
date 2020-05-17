@@ -1,4 +1,4 @@
-package cl.course.admin.model;
+package cl.course.admin.model.response;
 
 import java.io.Serializable;
 import java.util.Random;

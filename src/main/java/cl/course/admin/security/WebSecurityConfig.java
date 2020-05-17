@@ -21,7 +21,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 @EnableWebSecurity
@@ -67,17 +66,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-                // We don't need CSRF for this example
+
         httpSecurity.csrf().disable()
                 .cors().and()
-                // dont authenticate this particular request
                 .authorizeRequests()
+                // allow this route
                 .antMatchers("/token").permitAll()
-                // all other requests need to be authenticated
+                // others routes
                 .anyRequest().authenticated().and()
                 .exceptionHandling().and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        // Add a filter to validate the tokens with every request
+        // add filter for authenticated request
         httpSecurity.addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }
