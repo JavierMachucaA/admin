@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 public class StudentServiceImpl implements StudentService {
@@ -28,7 +30,9 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public StudentsPageableResponse getAll() {
         StudentsPageableResponse studentsPageableResponse = new StudentsPageableResponse();
-        studentsPageableResponse.setListStudents(this.studentRepository.findAll());
+        List<Student> listStudents = this.studentRepository.findAll();
+        listStudents.parallelStream().forEach(s -> s.setCourseItem(this.courseRepository.getByCode(s.getCourse())));
+        studentsPageableResponse.setListStudents(listStudents);
         studentsPageableResponse.setTotal(this.studentRepository.count());
         studentsPageableResponse.setOffset(0);
         studentsPageableResponse.setPage(-1);
@@ -39,7 +43,9 @@ public class StudentServiceImpl implements StudentService {
     public StudentsPageableResponse getPage(Integer page, Integer items) {
         StudentsPageableResponse studentsPageableResponse = new StudentsPageableResponse();
         Pageable pageOfItems = PageRequest.of(page, items);
-        studentsPageableResponse.setListStudents(this.studentRepository.getAllBy(pageOfItems));
+        List<Student> listStudents = this.studentRepository.getAllBy(pageOfItems);
+        listStudents.parallelStream().forEach(s -> s.setCourseItem(this.courseRepository.getByCode(s.getCourse())));
+        studentsPageableResponse.setListStudents(listStudents);
         studentsPageableResponse.setTotal(this.studentRepository.count());
         studentsPageableResponse.setOffset(items);
         studentsPageableResponse.setPage(page);
@@ -49,6 +55,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public StudentResponse getByRut(String rut) {
         Student studentExist = this.studentRepository.getByRut(rut);
+        studentExist.setCourseItem(this.courseRepository.getByCode(studentExist.getCourse()));
         if (studentExist != null) {
             return new StudentResponse(true, ConstantsUtils.MSJ_RUT_EXIST, studentExist);
         } else {
@@ -145,14 +152,14 @@ public class StudentServiceImpl implements StudentService {
             return new StudentResponse(false,ConstantsUtils.MSJ_STUDENT_UNDER_EIGHTEEN_YEARS, null);
         }
 
-        if (student.getCourse().length() > 4) {
+        /*if (student.getCourse().length() > 4) {
             return new StudentResponse(false,ConstantsUtils.MSJ_STUDENT_RUT_EXTENDS_LENGHT, null);
         }
 
         Course course = this.courseRepository.getByCode(student.getCourse());
         if (course == null){
             return new StudentResponse(false,ConstantsUtils.MSJ_STUDENT_IS_COUSE_NOT_EXIST, null);
-        }
+        }*/
         return new StudentResponse(true, null, null);
     }
 }

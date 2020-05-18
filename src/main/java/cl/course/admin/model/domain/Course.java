@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "course")
+@Embeddable
 public class Course {
 
     private String name;

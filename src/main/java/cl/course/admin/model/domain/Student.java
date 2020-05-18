@@ -11,7 +11,8 @@ public class Student {
     private String lastname;
     private Integer age;
     private String course;
-
+    @Transient
+    private Course courseItem;
     public String getRut() {
         return rut;
     }
@@ -50,5 +51,13 @@ public class Student {
 
     public void setCourse(String course) {
         this.course = course;
+    }
+
+    public Course getCourseItem() {
+        return courseItem;
+    }
+
+    public void setCourseItem(Course courseItem) {
+        this.courseItem = courseItem;
     }
 }
