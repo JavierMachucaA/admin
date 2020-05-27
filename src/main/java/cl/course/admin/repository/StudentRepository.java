@@ -11,4 +11,5 @@ public interface StudentRepository extends CrudRepository<Student, String> {
     List<Student> getAllBy(Pageable pageable);
     Student getByRut(String rut);
     Integer deleteByRut(String rut);
+    List<Student> findAllByCourse(String code);
 }

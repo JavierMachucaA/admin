@@ -1,6 +1,7 @@
 package cl.course.admin.model.domain;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "course")
@@ -10,6 +11,9 @@ public class Course {
     private String name;
     @Id
     private String code;
+
+    @Transient
+    private List<Student> listStudent;
 
     public String getName() {
         return name;
@@ -25,5 +29,13 @@ public class Course {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public List<Student> getListStudent() {
+        return listStudent;
+    }
+
+    public void setListStudent(List<Student> listStudent) {
+        this.listStudent = listStudent;
     }
 }

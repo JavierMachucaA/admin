@@ -18,7 +18,7 @@ public class JwtArtifact implements Serializable {
     private static final long serialVersionUID = new Random().nextLong();
 
     // five hours
-    public static final long JWT_TOKEN_EXPIRE = 5 * 60 * 60;
+    public static final long JWT_TOKEN_EXPIRE = 8 * 60 * 60;
 
     @Value("${jwt.secret}")
     private String seed;

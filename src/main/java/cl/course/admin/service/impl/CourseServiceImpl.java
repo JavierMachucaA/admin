@@ -4,6 +4,7 @@ import cl.course.admin.model.domain.Course;
 import cl.course.admin.model.response.CoursePageablerResponse;
 import cl.course.admin.model.response.CourseResponse;
 import cl.course.admin.repository.CourseRepository;
+import cl.course.admin.repository.StudentRepository;
 import cl.course.admin.service.CourseService;
 import cl.course.admin.utils.ConstantsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 public class CourseServiceImpl implements CourseService {
@@ -19,10 +22,15 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     private CourseRepository courseRepository;
 
+    @Autowired
+    private StudentRepository studentRepository;
+
     @Override
     public CoursePageablerResponse getAll() {
         CoursePageablerResponse coursePageablerResponse = new CoursePageablerResponse();
-        coursePageablerResponse.setListCourse(this.courseRepository.findAll());
+        List<Course> listCourse = this.courseRepository.findAll();
+        listCourse.parallelStream().forEach(c ->c.setListStudent(this.studentRepository.findAllByCourse(c.getCode())));
+        coursePageablerResponse.setListCourse(listCourse);
         coursePageablerResponse.setTotal(this.courseRepository.count());
         coursePageablerResponse.setOffset(0);
         coursePageablerResponse.setPage(-1);
@@ -33,7 +41,9 @@ public class CourseServiceImpl implements CourseService {
     public CoursePageablerResponse getPage(Integer page, Integer items) {
         CoursePageablerResponse coursePageablerResponse = new CoursePageablerResponse();
         Pageable pageOfItems = PageRequest.of(page, items);
-        coursePageablerResponse.setListCourse(this.courseRepository.getAllBy(pageOfItems));
+        List<Course> listCourse = this.courseRepository.getAllBy(pageOfItems);
+        listCourse.parallelStream().forEach(c ->c.setListStudent(this.studentRepository.findAllByCourse(c.getCode())));
+        coursePageablerResponse.setListCourse(listCourse);
         coursePageablerResponse.setTotal(this.courseRepository.count());
         coursePageablerResponse.setOffset(items);
         coursePageablerResponse.setPage(page);
@@ -44,6 +54,7 @@ public class CourseServiceImpl implements CourseService {
     public CourseResponse getByCode(String code) {
         Course courseExist = this.courseRepository.getByCode(code);
         if (courseExist != null) {
+            courseExist.setListStudent(this.studentRepository.findAllByCourse(code));
             return new CourseResponse(true, ConstantsUtils.MSJ_COURSE_EXIST, courseExist);
         } else {
             return new CourseResponse(false, ConstantsUtils.MSJ_COURSE_NOT_EXIST, null);
